@@ -1,0 +1,289 @@
+﻿@page "/people"
+@code {
+
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<script src="js/site.js"></script>
+
+<style>
+    .status-badge {
+        font-weight: bold;
+        padding: 4px 12px;
+        border-radius: 4px;
+        display: inline-block;
+        margin-bottom: 8px;
+    }
+
+    .bg-defined {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .bg-inprogress {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .bg-open {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .inventory-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+    }
+
+    .card-container {
+        display: flex;
+        background: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 4px rgba(0,0,0,0.1);
+    }
+
+    .card-content {
+        flex-grow: 1;
+        padding: 10px;
+    }
+
+    .card-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        border-left: 1px solid #ccc;
+        padding: 10px 8px;
+        min-width: 90px;
+        background-color: #fafafa;
+        gap: 12px;
+    }
+
+    .card-actions button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        font-size: 14px;
+        color: #444;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        padding: 4px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .card-actions button:hover {
+        color: #007bff;
+    }
+
+    .card-actions button i {
+        font-size: 18px;
+        margin-bottom: 4px;
+    }
+
+    .card-actions button span {
+        font-size: 12px;
+    }
+
+    .info-box {
+        border: 1px solid #e0e0e0;
+        padding: 8px 10px;
+        margin-bottom: 8px;
+    }
+
+    .info-box strong {
+        display: inline-block;
+        width: 130px;
+    }
+
+    .column-40 {
+        width: 40%;
+    }
+
+    .column-100 {
+        width: 100%;
+    }
+
+    .checkbox-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.95rem;
+        color: #555;
+        background-color: #f9f9f9;
+        padding: 4px 8px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        margin-left: 10px;
+        cursor: not-allowed;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+        accent-color: #6c757d;
+        width: 16px;
+        height: 16px;
+    }
+
+    .new-inventory {
+        margin-top: 2rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: #2c3e50;
+        transition: color 0.3s ease;
+    }
+
+    .new-inventory i {
+        font-size: 1.4rem;
+        color: #27ae60;
+        transition: color 0.3s ease;
+    }
+
+    .new-inventory:hover {
+        color: #27ae60;
+    }
+
+    .new-inventory:hover i {
+        color: #1e8449;
+    }
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.2); /* Optional background dimming */
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    overflow-y: auto;
+}
+
+.modal-dialog {
+    width: 30%;
+    background-color: #fff;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding: 0;
+    border-radius: 8px;
+    border: 2px solid #d1d1d1;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 2px solid #ccc;
+    background-color: #f9f9f9;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-weight: bold;
+    font-size: 1.05rem;
+}
+
+.modal-body {
+    padding: 12px;
+    border-top: 2px solid #ccc;
+    background-color: #fff;
+}
+
+/* Optional: Improve spacing for internal field sections */
+.modal-section {
+    margin-bottom: 16px;
+    border: 1px solid #000;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+
+.btn-close {
+    border: none;
+    background: none;
+    font-size: 1.5rem;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.btn-close:hover {
+    color: #000;
+}
+
+.info-box {
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.checkbox-label {
+    margin-left: 10px;
+    font-size: 0.9rem;
+    color: #555;
+}
+.form-section {
+    border: 2px solid #000; /* bold black border like wireframe */
+    padding: 2px;
+    margin-bottom: 6px;
+    background-color: #fff; /* keep it white unless yellow is required */
+    border-radius: 6px;
+}
+
+.info-box {
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.checkbox-label {
+    margin-left: 10px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.form-control {
+    margin-bottom: 1rem;
+    border: 1.5px solid #888;
+    border-radius: 4px;
+}
+
+.form-control:focus {
+    background-color: #fff;
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+.form-control:hover {
+    border-color: #888;
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+    background-color: #e9ecef;
+
+    opacity: 1;
+    cursor: not-allowed;
+}
+
+
+</style>
+<h3 class="my-4">People</h3>
+<h5> People page</h5>
+<br />
+<div class="new-inventory" role="button" tabindex="0" style="cursor: pointer;">
+    <i class="fa fa-backward"></i> <a href="/Inventories"> Back to Inventory List</a>
+</div>
